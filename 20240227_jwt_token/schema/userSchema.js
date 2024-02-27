@@ -10,10 +10,6 @@ const users = new mongoose.Schema({
         type:String,
         required:true
     },
-    token:{
-        type:String,
-        minLength:6,
-    }
 })
 
 // Create and export the 'users' model based on the userSchema
