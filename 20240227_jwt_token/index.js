@@ -48,7 +48,37 @@ app.post('/signup', async (req, res) => {
 })
 
 
+app.post('/login', async (req, res) => {
+    try {
+        const username = req.body.username
+        const password = req.body.password
 
+        // Check if the user exists
+        const userExist = await Users.findOne({ username: username })
+
+        if (!userExist) {
+            return res.status(401).send("Username doesn't exist. Please enter the right username.")
+        }
+
+        // Check if the password is correct
+        const checkPassword = await bcrypt.compare(password, userExist.password)
+        // console.log(checkPassword)
+
+        if (!checkPassword) {
+            return res.status(401).send("Incorrect password.")
+        }
+        
+        // User is authenticated, create JWT token
+        const accessToken = jwt.sign({ username: userExist.username },process.env.SECRET_KEY,{ expiresIn: '5s' })
+
+        // Set the token in the response headers
+        res.set('Authorization', 'Bearer ' + accessToken)
+        res.status(200).send("User logged in successfully.")
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to login. Try again.");
+    }
+});
 
 
 
