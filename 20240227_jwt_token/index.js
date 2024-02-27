@@ -80,6 +80,31 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/posts', async (req, res) => {
+    try {
+        // Extract post details from request body
+        const { title, desc, author } = req.body;
+        // Check if the author exists
+        const userExist = await Users.findOne({username:author});
+
+        if (!userExist) {
+            return res.status(404).send("Author not found.");
+        }
+        console.log(userExist)
+        // Create a new post
+        const newPost = await Posts.create({
+            title: title,
+            desc: desc,
+            author: userExist._id
+        });
+
+        res.status(201).send('New post created successfully.');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to create new post.");
+    }
+});
+
 
 
 // Start the Express server and listen on the specified port
