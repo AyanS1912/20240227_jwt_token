@@ -7,7 +7,7 @@ app.use(express.json()) // Middleware to parse incoming JSON requests
 
 
 const mongoose = require('mongoose') // Import the mongoose module for MongoDB connection
-const URI = "mongodb+srv://root:root@cluster0.novqvdq.mongodb.net/Router?retryWrites=true&w=majority&appName=Cluster0" 
+const URI = "mongodb+srv://root:root@cluster0.novqvdq.mongodb.net/Router?retryWrites=true&w=majority&appName=Cluster0"
 const PORT = process.env.PORT || 5000 // Port on which the server will listen
 
 // Connect to MongoDB using Mongoose
@@ -67,30 +67,43 @@ app.post('/login', async (req, res) => {
         if (!checkPassword) {
             return res.status(401).send("Incorrect password.")
         }
-        
+
         // User is authenticated, create JWT token
-        const accessToken = jwt.sign({ username: userExist.username },process.env.SECRET_KEY,{ expiresIn: '5s' })
+        const accessToken = jwt.sign({ username: userExist.username }, process.env.SECRET_KEY, { expiresIn: '1h' })
 
         // Set the token in the response headers
         res.set('Authorization', 'Bearer ' + accessToken)
         res.status(200).send("User logged in successfully.")
     } catch (error) {
         console.error(error);
-        res.status(500).send("Failed to login. Try again.");
+        res.status(500).send("Failed to login. Try again.")
     }
-});
+})
 
 app.post('/posts', async (req, res) => {
     try {
-        // Extract post details from request body
-        const { title, desc, author } = req.body;
-        // Check if the author exists
-        const userExist = await Users.findOne({username:author});
+
+        const token = req.headers.authorization;// Extract the JWT token from the request headers
+        // Check if the token exists
+        if (!token) {
+            return res.status(401).send("Access denied. Token not provided.");
+        }
+        const decodedToken = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY);// Verify the token
+
+        // Extract username from the decoded token
+        const author = decodedToken.username;
+        const userExist = await Users.findOne({ username: author });
 
         if (!userExist) {
             return res.status(404).send("Author not found.");
         }
-        console.log(userExist)
+
+        // Extract post details from request body
+        const { title, desc } = req.body;
+
+        if(title){
+            res.status(401).send("Title already exist.")
+        }
         // Create a new post
         const newPost = await Posts.create({
             title: title,
@@ -101,9 +114,10 @@ app.post('/posts', async (req, res) => {
         res.status(201).send('New post created successfully.');
     } catch (error) {
         console.error(error);
-        res.status(500).send("Failed to create new post.");
+        res.status(500).send("Failed to Create New Post")
     }
 });
+
 
 
 
