@@ -13,6 +13,8 @@ const PORT = process.env.PORT || 5000 // Port on which the server will listen
 // Connect to MongoDB using Mongoose
 mongoose.connect(URI)
 
+const Users = require('./schema/userSchema')
+const Posts = require('./schema/postSchema')
 // Start the Express server and listen on the specified port
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
