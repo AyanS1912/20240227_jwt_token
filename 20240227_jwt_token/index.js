@@ -38,11 +38,11 @@ app.post('/signup', async (req, res) => {
         const newUser = await Users.create({
             username: username,
             password: hashedPassword
-        });
+        })
 
         res.status(201).send('New user created successfully.')
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).send("Failed to register new user.")
     }
 })
@@ -75,7 +75,7 @@ app.post('/login', async (req, res) => {
         res.set('Authorization', 'Bearer ' + accessToken)
         res.status(200).send("User logged in successfully.")
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).send("Failed to login. Try again.")
     }
 })
@@ -83,42 +83,99 @@ app.post('/login', async (req, res) => {
 app.post('/posts', async (req, res) => {
     try {
 
-        const token = req.headers.authorization;// Extract the JWT token from the request headers
+        const token = req.headers.authorization// Extract the JWT token from the request headers
         // Check if the token exists
         if (!token) {
-            return res.status(401).send("Access denied. Token not provided.");
+            return res.status(401).send("Access denied. Token not provided.")
         }
-        const decodedToken = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY);// Verify the token
+        const decodedToken = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY)// Verify the token
 
         // Extract username from the decoded token
-        const author = decodedToken.username;
-        const userExist = await Users.findOne({ username: author });
+        const author = decodedToken.username
+        const userExist = await Users.findOne({ username: author })
 
         if (!userExist) {
-            return res.status(404).send("Author not found.");
+            return res.status(404).send("Author not found.")
         }
 
         // Extract post details from request body
-        const { title, desc } = req.body;
+        const { title, desc } = req.body
 
-        if(title){
-            res.status(401).send("Title already exist.")
-        }
         // Create a new post
         const newPost = await Posts.create({
             title: title,
             desc: desc,
             author: userExist._id
-        });
+        })
 
-        res.status(201).send('New post created successfully.');
+        res.status(201).send('New post created successfully.')
     } catch (error) {
-        console.error(error);
+        console.error(error)
         res.status(500).send("Failed to Create New Post")
     }
-});
+})
 
 
+app.get('/myposts', async (req,res) => {
+    try{
+        const token = req.headers.authorization// Extract the JWT token from the request headers
+        // Check if the token exists
+        if (!token) {
+            return res.status(401).send("Access denied. Token not provided.")
+        }
+        const decodedToken = jwt.verify(token.split(' ')[1], process.env.SECRET_KEY)// Verify the token
+
+        const author = decodedToken.username // Extract username from the decoded token
+        
+        const userExist = await Users.findOne({ username: author })// Check if the user exists
+
+        if (!userExist) {
+            return res.status(404).send("Author not found.")
+        }
+         // Find posts authored by the user
+        const myposts = await Posts.find({author:userExist._id})
+        res.status(200).send(myposts)
+    }   
+    catch(error){
+        console.error(error)
+        res.status(500).send("Failed to Retrieve data.")
+    } 
+})
+
+app.delete('/deletepost', async(req,res) => {
+    try{
+        const token = req.headers.authorization// Extract the JWT token from the request headers
+
+    if(!token){
+        res.status(401).send("Access denied. Token not provided.")
+    }
+
+    const decodedToken = jwt.verify(token.split(' ')[1],process.env.SECRET_KEY)// Verify the token
+    const author = decodedToken.username // Extract username from the decoded token
+
+    const userExist = await Users.findOne({ username: author})// Check if the user exists
+    
+    if (!userExist) {
+        return res.status(404).send("Author not found.")
+    }
+
+    const title = req.body.title // Get the title
+    // Find posts authored by the user with given title and delete it,
+    const deletePost = await Posts.findOneAndDelete({title:title,author:userExist._id})
+    console.log(deletePost)
+
+    if(!deletePost){
+        return res.status(401).send("Post not Found")
+    }
+    res.status(200).send("Post deleted Sucessfully")
+
+    }
+    catch(error){
+        console.error(error)
+        res.status(500).send("Failed to delete Post")
+    }
+
+})
 
 
 // Start the Express server and listen on the specified port
