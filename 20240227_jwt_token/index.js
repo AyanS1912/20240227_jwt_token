@@ -100,7 +100,11 @@ app.post('/posts', async (req, res) => {
 
         // Extract post details from request body
         const { title, desc } = req.body
-
+        
+        const checkTitle = await Posts.findOne({title:title, author: userExist._id})
+        if(checkTitle){
+            return res.status(406).send("Same Named Title exist for the user.")
+        }
         // Create a new post
         const newPost = await Posts.create({
             title: title,
@@ -165,7 +169,7 @@ app.delete('/deletepost', async(req,res) => {
     console.log(deletePost)
 
     if(!deletePost){
-        return res.status(401).send("Post not Found")
+        return res.status(404).send("Post not Found")
     }
     res.status(200).send("Post deleted Sucessfully")
 
