@@ -164,6 +164,12 @@ app.delete('/deletepost', async(req,res) => {
     }
 
     const title = req.body.title // Get the title
+
+    const postOwner = await Posts.findOne({title:title})
+
+    if(!(userExist._id === postOwner.author)){
+        return res.status(401).send("User not authorised to delete the post.")
+    }
     // Find posts authored by the user with given title and delete it,
     const deletePost = await Posts.findOneAndDelete({title:title,author:userExist._id})
     console.log(deletePost)
