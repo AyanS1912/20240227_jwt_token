@@ -1,0 +1,115 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "JWT_TOKEN",
+    "dateExported": "2024-02-28T04:38:59.356Z",
+    "version": "1.1",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "71e414c5-20db-426f-883c-7c0290d024e3",
+            "colId": "fcee6a53-69be-4e75-90de-92fa9b6a557a",
+            "containerId": "",
+            "name": "Creating a new user",
+            "url": "http://localhost:5000/signup",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2024-02-27T17:52:02.887Z",
+            "modified": "2024-02-27T18:06:23.202Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\":\"Ummu\",\n  \"password\":\"Ummu05\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9871ca40-d61e-4c6d-ab32-f40727edf8d5",
+            "colId": "fcee6a53-69be-4e75-90de-92fa9b6a557a",
+            "containerId": "",
+            "name": "Login",
+            "url": "http://localhost:5000/login",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2024-02-27T18:46:41.763Z",
+            "modified": "2024-02-27T18:46:41.763Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"username\": \"Umesh\",\n  \"password\" : \"Umesh123\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "068b2eaf-182f-414b-9d02-5eeeda771b17",
+            "colId": "fcee6a53-69be-4e75-90de-92fa9b6a557a",
+            "containerId": "",
+            "name": "Post Created using Token",
+            "url": "localhost:5000/posts",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2024-02-27T19:23:49.608Z",
+            "modified": "2024-02-27T19:23:49.608Z",
+            "headers": [
+                {
+                    "name": "authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVtZXNoIiwiaWF0IjoxNzA5MDYwODQyLCJleHAiOjE3MDkwNjQ0NDJ9.jSVhFQTD34sBHQupzg1bg0gC-bxBG7Lxu_c25l0V7NI"
+                },
+                {
+                    "name": "name",
+                    "value": "Ayan",
+                    "isDisabled": true
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Post\",\n  \"desc\": \"Anime post are here\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "08219268-85be-41ff-aecf-5cccfc120315",
+            "colId": "fcee6a53-69be-4e75-90de-92fa9b6a557a",
+            "containerId": "",
+            "name": "Retrieve all my post",
+            "url": "localhost:5000/myposts",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2024-02-27T19:55:28.436Z",
+            "modified": "2024-02-27T19:55:28.436Z",
+            "headers": [
+                {
+                    "name": "authorization",
+                    "value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlVtZXNoIiwiaWF0IjoxNzA5MDYwODQyLCJleHAiOjE3MDkwNjQ0NDJ9.jSVhFQTD34sBHQupzg1bg0gC-bxBG7Lxu_c25l0V7NI"
+                },
+                {
+                    "name": "Accept",
+                    "value": "*/*",
+                    "isDisabled": true
+                },
+                {
+                    "name": "User-Agent",
+                    "value": "Thunder Client (https://www.thunderclient.com)",
+                    "isDisabled": true
+                }
+            ],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
